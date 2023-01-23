@@ -454,19 +454,19 @@ class BlastResult(object):
         self.query_cov = 100.0 * len(parts[11]) / float(parts[10])
         self.x_query_cov = 300.0 * len(parts[11]) / float(parts[10])
 
-def generate_output(outdir, labels):
+def generate_output(output, labels):
     # Generate a blank output table file
-    if pathlib.Path(outdir).is_file():
+    if pathlib.Path(output).is_file():
         return
     headers = ['Isolate', 'Species', 'Serotype', 'Coverage', 'Identity', 'ST', 'VFs counts', 'human infection potential', 
                'zoonotic_score', 'AMRG_level', 'aminoglycoside', 'macrolide', 'tetracycline']
     for i in labels:
         headers.append(i)
-    with open(outdir, 'wt') as file:
+    with open(output, 'wt') as file:
         file.write('\t'.join(headers))
         file.write('\n')
 
-def output(outdir, inputfile, species, serotype, sero_coverage, sero_identity, best_ST, VFs_counts, vf_genes, human_infection_potential, 
+def output(output, inputfile, species, serotype, sero_coverage, sero_identity, best_ST, VFs_counts, vf_genes, human_infection_potential, 
        zoonotic_score, AMRG_level, amino, macro, tetra, best_mlst_match):
     # Generate output
     simple_output = inputfile + ' : ' + species + ' ' + 'serotype' + ' ' + serotype + ' ' + 'ST' + ' ' + best_ST
@@ -475,7 +475,7 @@ def output(outdir, inputfile, species, serotype, sero_coverage, sero_identity, b
     for i in best_mlst_match:
         line.append(i)
     print(simple_output)
-    with open(outdir, 'at') as file:
+    with open(output, 'at') as file:
         file.write('\t'.join(line))
         file.write('\n')   
 
@@ -536,8 +536,8 @@ def main():
         human_infection_potential, zoonotic_score = calculate_zoonotic_potential(vf_genes)
         all_vfs.append(vf_genes)
     # Generate output
-        generate_output(args.outdir, labels)
-        output(args.outdir, inputfile, species, serotype, sero_coverage, sero_identity, best_ST, VFs_counts, vf_genes, human_infection_potential, 
+        generate_output(args.output, labels)
+        output(args.output, inputfile, species, serotype, sero_coverage, sero_identity, best_ST, VFs_counts, vf_genes, human_infection_potential, 
                zoonotic_score, AMRG_level, amino, macro, tetra, best_mlst_match)
     # Generate heatmap
     if not args.no_heat_map:
