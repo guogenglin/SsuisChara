@@ -44,7 +44,7 @@ python SsuisChara.py -i *.fasta
 # MLST sequence type
   The MLST database were obtained from [pubMLST](https://pubmlst.org/), update: 2023-01-12
   
-  Seven housekeeping genes, aroA, cpn60, dpr, gki, mutS, recA, and thrA, of *Streptococcus suis*, were screened in input genome and return there allele number, or closest allele number, then determine there Sequence Type (ST), if not every allele number are exact match, a "?" will be added to the end of output string of predicted ST.
+  Seven housekeeping genes, *aroA*, *cpn60*, *dpr*, *gki*, *mutS*, *recA*, and *thrA*, of *Streptococcus suis*, were screened in input genome and return there allele number, or closest allele number, then determine there Sequence Type (ST), if not every allele number are exact match, a "?" will be added to the end of output string of predicted ST.
 # Virulence associated factors (vafs) screen
   Total 111 vafs of *S. suis* were collected from published papers and established as database to screen there presence and absence in input genome. 53 vafs distributed in accessory genome of S. suis, 58 vafs distributed in core genome of *S. suis*, two screen mode are provided, "concise" and "full", "concise" mode was set as default, only screen 53 vafs in accessory genome, "full" mode could screen all vafs.
   A heatmap based on the presence and absence of vafs were generated and clustered to visualize the vafs prevalence. If the user do not want to generate a heatmap, could use '''--no_heat_map''' command.
