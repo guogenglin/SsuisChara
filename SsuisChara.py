@@ -28,8 +28,8 @@ def get_argument():
     # Input and output
     parser_group_1.add_argument('-i', '--input', required = True, nargs = '+', type = str, 
                                 help = 'Input FASTA file')
-    parser_group_1.add_argument('-o', '--outdir', required = False, type = str, default = 'SsuisChara_output.txt',
-                              help = 'Output directory')
+    parser_group_1.add_argument('-o', '--output', required = False, type = str, default = 'SsuisChara_output.txt',
+                              help = 'Output file')
 
     # Parameters
     parser_group_2.add_argument('-t', '--threads', required = False, type = int, default = min(multiprocessing.cpu_count(), 4), 
@@ -151,6 +151,8 @@ def get_serotype(inputfile, input_seq, refpath, threads):
         best_serotype = 'NA'
     if best_coverage <= 95.0:
         best_serotype += '?'
+    if best_identity > 100.00:
+        best_identity = 100.00
     return best_serotype, round(best_coverage, 2), round(best_identity, 2)
         
 def get_total_length(value):
