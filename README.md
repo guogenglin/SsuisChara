@@ -4,7 +4,6 @@ SsuisChara is a tool for integrally analyze the genome characteristics of *Strep
  * Serotype prediction
  * MLST sequence type
  * Virulence associated factors (vafs) screen
- * Clustermap of vafs generate
  * Human infection potential
  * Antimicrobial resistance determinants
 
@@ -47,9 +46,11 @@ python SsuisChara.py -i *.fasta
   Seven housekeeping genes, *aroA*, *cpn60*, *dpr*, *gki*, *mutS*, *recA*, and *thrA*, of *Streptococcus suis*, were screened in input genome and return there allele number, or closest allele number, then determine there Sequence Type (ST), if not every allele number are exact match, a "?" will be added to the end of output string of predicted ST.
 # Virulence associated factors (vafs) screen
   Total 111 vafs of *S. suis* were collected from published papers and established as database to screen there presence and absence in input genome. 53 vafs distributed in accessory genome of S. suis, 58 vafs distributed in core genome of *S. suis*, two screen mode are provided, "concise" and "full", "concise" mode was set as default, only screen 53 vafs in accessory genome, "full" mode could screen all vafs.
+  
   A heatmap based on the presence and absence of vafs were generated and clustered to visualize the vafs prevalence. If the user do not want to generate a heatmap, could use '''--no_heat_map''' command.
 # Human infection potential
   Several vafs are found associated with human *S. suis* infection in previous study, there prevalence ratio in human *S. suis* isolated were used as weight of each vafs, we use the prevalence of these vafs to predict the human infection potential of each source isolate of input gneomic sequence.
+  
   The summation of weights were named as "zoonotic score", if zoonotic_score >= 70.0, we give human_infection_potential as "high", if 30.0 <= zoonotic_score < 70.0, we give human_infection_potential as "medium", if zoonotic_score < 30.0, we give human_infection_potential as "low".
 # Antimicrobial resistance determinants
   Aminoglycoside, macrolide, and tetracycline are major class of antimicrobial drugs resist by *S. suis*, we screened the known AMRGs resist these drugs to determine the antimicrobial resistance level of each source isolate of input gneomic sequence, the AMRG_level = The number of these 3 AMR drugs class covered by the AMRG screened in input genome. Then the screened AMRGs will be output in output file.
