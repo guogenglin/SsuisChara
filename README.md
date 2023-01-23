@@ -55,4 +55,9 @@ python SsuisChara.py -i *.fasta
 # Antimicrobial resistance determinants
   Aminoglycoside, macrolide, and tetracycline are major class of antimicrobial drugs resist by *S. suis*, we screened the known AMRGs resist these drugs to determine the antimicrobial resistance level of each source isolate of input gneomic sequence, the AMRG_level = The number of these 3 AMR drugs class covered by the AMRG screened in input genome. Then the screened AMRGs will be output in output file.
 # Output
-  The simlified result will generated in terminal, a detailed table were generated in work folder, also a heatmap.
+  The simlified result will generated in terminal
+![Terminal screen](https://user-images.githubusercontent.com/108860907/214083327-5432ad06-bc12-4d68-9ae9-cc7b567dc338.png)
+ a detailed table were generated in work folder
+ [SsuisChara_output.txt](https://github.com/guogenglin/SsuisChara/files/10481287/SsuisChara_output.txt)
+ also a heatmap
+![heatmap](https://user-images.githubusercontent.com/108860907/214083409-de1e91f8-e244-4355-b124-70cee2984f2a.png)
