@@ -61,8 +61,8 @@ python SsuisChara.py -i *.fasta
 
  A detailed table generated in work folder
  
-![output](https://user-images.githubusercontent.com/108860907/214084059-fb1db6b2-d809-4676-adbd-49321ef23187.jpg)
+![output](https://user-images.githubusercontent.com/108860907/214313514-6dbcacb0-9dbc-4152-bed5-7ee5a2eca13b.png)
 
  Also a heatmap
  
-![heatmap](https://user-images.githubusercontent.com/108860907/214083409-de1e91f8-e244-4355-b124-70cee2984f2a.png)
+![heatmap](https://user-images.githubusercontent.com/108860907/214313545-fa92b053-7e36-40e7-8d81-40862fba2434.png)
