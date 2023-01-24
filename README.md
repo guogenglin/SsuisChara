@@ -63,6 +63,6 @@ python SsuisChara.py -i *.fasta
  
 ![output](https://user-images.githubusercontent.com/108860907/214313514-6dbcacb0-9dbc-4152-bed5-7ee5a2eca13b.png)
 
- Also a heatmap
+ Also a clusterd heatmap
  
 ![heatmap](https://user-images.githubusercontent.com/108860907/214313545-fa92b053-7e36-40e7-8d81-40862fba2434.png)
