@@ -506,7 +506,7 @@ def generate_heatmap(all_input_names, refpath, all_vfs, mode):
     matrix = pd.DataFrame(vf_matrix)
     matrix.columns = vf_names
     matrix.index = all_input_names
-    figx = len(vf_names)
+    figx = len(vf_names) / 3
     figy = len(all_input_names)
     sns.clustermap(matrix, cmap = 'Set2_r', linewidth=1, col_cluster = False, figsize = (figx, figy))
     savepath = pathlib.Path(refpath).parent
