@@ -506,7 +506,9 @@ def generate_heatmap(all_input_names, refpath, all_vfs, mode):
     matrix = pd.DataFrame(vf_matrix)
     matrix.columns = vf_names
     matrix.index = all_input_names
-    sns.clustermap(matrix, cmap = 'Set2_r', linewidth=1, col_cluster = False)
+    figx = len(vf_names)
+    figy = len(all_input_names)
+    sns.clustermap(matrix, cmap = 'Set2_r', linewidth=1, col_cluster = False, figsize = (figx, figy))
     savepath = pathlib.Path(refpath).parent
     savepath = savepath / 'heatmap.png'
     plt.savefig(savepath, dpi = 600)
