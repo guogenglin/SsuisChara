@@ -1,5 +1,5 @@
 # SsuisChara
-SsuisChara is a tool for integrally analyze the genome characteristics of *Streptococcus suis* using assemblied genome sequence for:
+SsuisChara is a tool for integrally analyze the characteristics of *Streptococcus suis* using assemblied genome sequence for:
  * Species verification
  * Serotype prediction
  * MLST sequence type
