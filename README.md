@@ -16,7 +16,7 @@ prodigal
 Put the python script and database folder into the folder contains your sequence file
 
 ```
-SsuisChara [-i] [-o] [-r] [-t] [-v]
+SsuisChara [-i] [-o] [-t] [--min_gene_cov] [--min_gene_id ] [--vf_screen_mode] [--no_heat_map] [-v]
 Input and Output:
   -i, --input             Input FASTA file
   -o, --output            Output file
