@@ -17,7 +17,7 @@ import seaborn as sns
 import pandas as pd
 from matplotlib import pyplot as plt
 
-__version__ = '1.0'
+__version__ = '1.1'
 
 def get_argument():
     # Parsers
@@ -40,7 +40,7 @@ def get_argument():
                                help = 'Minimum percentage identity to consider a single gene complete. [default: 70.0%]')
     parser_group_2.add_argument('--vf_screen_mode', required = False, type = str, default = 'concise', 
                                 help = 'The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default.')
-    parser_group_2.add_argument('--no_heat_map', action='store_true', help = 'Suppress output of heatmap file')
+    parser_group_2.add_argument('--heat_map', action='store_true', help = 'Generate a heatmap file to visualize the prevalence of VFs')
     parser_group_2.add_argument('-v', '--version', action = 'version', version = 'BacSpecies v' + __version__, 
                         help = 'Show version number and exit')
     return parser
@@ -112,8 +112,8 @@ def get_best_species_result(inputfile, refpath, threads):
             continue
         if hit.pident >= 97.0:
             species = 'Streptococcus suis'
-        else:
-            species = 'Not Streptococcus suis'
+    if not species:
+        species = 'NA'
     return species
 
 def get_serotype(inputfile, input_seq, refpath, threads):
@@ -308,18 +308,20 @@ def process_AMRG_result(aminoglycoside, macrolide, tetracycline):
         tetra +=';'
     return amino, macro, tetra
 
-def get_VFs_result(input_orfs, refpath, threads, mode, min_gene_id, min_gene_cov):
+def get_VFs_result(input_orfs, refpath, threads, mode, min_gene_id, min_gene_cov, inputfile):
     # Screen the VF genes in input genomic sequence
     VF_genes = []
+    VF_details = dict()
     repath = refpath / 'VFs'
     if mode == 'concise':
         inpa = pathlib.Path(repath).resolve() / 'vfs_in_accessory_genome.fasta'
     elif mode == 'full':
         inpa = redirection(repath)
     for orf in input_orfs:
+        gene_code = str(orf.contig) + '_' + str(orf.start) + '_' + str(orf.end) + '_' + str(orf.strand)
         with open('temp_blast_inpa.txt', 'wt') as file:
             file.write('>')
-            file.write(str(orf.contig) + '_' + str(orf.start) + '_' + str(orf.end) + '_' + str(orf.strand))
+            file.write(gene_code)
             file.write('\n')
             file.write(str(orf.sequence))
         repa = pathlib.Path('temp_blast_inpa.txt').resolve()
@@ -336,13 +338,21 @@ def get_VFs_result(input_orfs, refpath, threads, mode, min_gene_id, min_gene_cov
                 best_pident = hit.pident
                 best_cov = hit.x_query_cov
                 best_match = hit.sseqid
-        if best_match and best_match not in VF_genes:
-            VF_genes.append(best_match)
-    if mode == 'full':
-        pathlib.Path(inpa).unlink()
+        if best_match:
+            if best_match not in VF_details:
+                VF_details[best_match] = [gene_code]
+            else:
+                VF_details[best_match].append(best_match)
+            if best_match not in VF_genes:
+                VF_genes.append(best_match)
     pathlib.Path('temp_blast_inpa.txt').unlink()
     VFs_counts = len(VF_genes)
-    return VFs_counts, VF_genes
+    headers = generate_vf_matrix_output(inpa)
+    total_VFs = str(len(headers) - 1)
+    vf_output(inputfile, VF_details, headers)
+    if mode == 'full':
+        pathlib.Path(inpa).unlink()
+    return VFs_counts, VF_genes, total_VFs
 
 def redirection(repath):
     # Based on the given command, redirect the vf gene database if necessary
@@ -358,6 +368,38 @@ def redirection(repath):
     accessory.close()
     return newpath
     
+def generate_vf_matrix_output(inpa):
+    # Generate a blank output table file
+    headers = ['Isolate']
+    with open(inpa, 'rt') as file:
+        for line in file:
+            if line.startswith('>'):
+                line = line.strip('\n')
+                headers.append(line[1:])
+            else:
+                continue
+    if not pathlib.Path('vf_matrix.txt').is_file():
+        with open('vf_matrix.txt', 'wt') as file:
+            file.write('\t'.join(headers))
+            file.write('\n')
+    return headers
+
+def vf_output(inputfile, VF_details, headers):
+    # Generate output
+    line = [inputfile]
+    for i in headers[1:]:
+        if i in VF_details:
+            genes = ''
+            for j in VF_details[i]:
+                genes += j
+                genes += ';'
+            line.append(genes)
+        else:
+            line.append('NA')
+    with open('vf_matrix.txt', 'at') as file:
+        file.write('\t'.join(line))
+        file.write('\n')  
+        
 def run_blast(inpa, repa, threads, setting):
     # Do blast, iterator the result to a list
     blast_hits = []
@@ -454,11 +496,12 @@ class BlastResult(object):
         self.query_cov = 100.0 * len(parts[11]) / float(parts[10])
         self.x_query_cov = 300.0 * len(parts[11]) / float(parts[10])
 
-def generate_output(output, labels):
+def generate_output(output, labels, total_VFs):
     # Generate a blank output table file
     if pathlib.Path(output).is_file():
         return
-    headers = ['Isolate', 'Species', 'Serotype', 'Coverage', 'Identity', 'ST', 'VFs counts', 'human infection potential', 
+    VFs = 'VFs counts (n/' + total_VFs + ')'
+    headers = ['Isolate', 'Species', 'Serotype', 'Coverage', 'Identity', 'ST', VFs, 'human infection potential', 
                'zoonotic_score', 'AMRG_level', 'aminoglycoside', 'macrolide', 'tetracycline']
     for i in labels:
         headers.append(i)
@@ -534,15 +577,15 @@ def main():
         input_orfs = prodigal(inputfile, input_seq)
         AMRG_level, aminoglycoside, macrolide, tetracycline = get_amrg_result(input_orfs, refpath, args.threads)
         amino, macro, tetra = process_AMRG_result(aminoglycoside, macrolide, tetracycline)
-        VFs_counts, vf_genes = get_VFs_result(input_orfs, refpath, args.threads, args.vf_screen_mode, args.min_gene_id, args.min_gene_cov)
+        VFs_counts, vf_genes, total_VFs = get_VFs_result(input_orfs, refpath, args.threads, args.vf_screen_mode, args.min_gene_id, args.min_gene_cov, inputfile)
         human_infection_potential, zoonotic_score = calculate_zoonotic_potential(vf_genes)
         all_vfs.append(vf_genes)
     # Generate output
-        generate_output(args.output, labels)
+        generate_output(args.output, labels, total_VFs)
         output(args.output, inputfile, species, serotype, sero_coverage, sero_identity, best_ST, VFs_counts, vf_genes, human_infection_potential, 
                zoonotic_score, AMRG_level, amino, macro, tetra, best_mlst_match)
     # Generate heatmap
-    if not args.no_heat_map:
+    if  args.heat_map:
         generate_heatmap(all_input_names, refpath, all_vfs, args.vf_screen_mode)
     # Total time count
     endtime = time.perf_counter() - starttime
