@@ -25,7 +25,7 @@ Parameters:
   --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
   --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
   --vf_screen_mode        The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default
-  --no_heat_map           Suppress output of heatmap file
+  --heat_map              Generate a heatmap file to visualize the prevalence of VFs
   -v, --version           Show version number and exit
 ```
 # Quick usage
@@ -47,7 +47,7 @@ python SsuisChara.py -i *.fasta
 # Virulence associated factors (vafs) screen
   Total 111 vafs of *S. suis* were collected from published papers and established as database to screen there presence and absence in input genome. 53 vafs distributed in accessory genome of S. suis, 58 vafs distributed in core genome of *S. suis*, two screen mode are provided, "concise" and "full", "concise" mode was set as default, only screen 53 vafs in accessory genome, "full" mode could screen all vafs.
   
-  A heatmap based on the presence and absence of vafs were generated and clustered to visualize the vafs prevalence. If the user do not want to generate a heatmap, could use '''--no_heat_map''' command.
+  A table include the virulence prevalence information will be generated, contained the location of matched genes of known VFs. A heatmap based on the presence and absence of vafs could be generated and clustered to visualize the vafs prevalence use '''--heat_map''' command.
 # Human infection potential
   Several vafs are found associated with human *S. suis* infection in previous study, there prevalence ratio in human *S. suis* isolated were used as weight of each vafs, we use the prevalence of these vafs to predict the human infection potential of each source isolate of input gneomic sequence.
   
