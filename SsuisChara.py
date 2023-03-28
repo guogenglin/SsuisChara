@@ -559,7 +559,7 @@ def generate_heatmap(all_input_names, refpath, all_vfs, mode):
         pathlib.Path(repa).unlink()
     
 def main():
-    print('presented by Genglin Guo')
+    print('If you have any quesions or suggestions for SsuisChara, please contact Genglin Guo, e-mail: 2019207025@njau.edu.cn')
     starttime = time.perf_counter()
     # Initialize
     args = get_argument().parse_args()
