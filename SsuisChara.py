@@ -42,7 +42,7 @@ def get_argument():
     parser_group_2.add_argument('--vf_screen_mode', required = False, type = str, default = 'concise', 
                                 help = 'The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default.')
     parser_group_2.add_argument('--heat_map', action='store_true', help = 'Generate a heatmap file to visualize the prevalence of VFs')
-    parser_group_2.add_argument('-v', '--version', action = 'version', version = 'BacSpecies v' + __version__, 
+    parser_group_2.add_argument('-v', '--version', action = 'version', version = 'SsuisChara v' + __version__, 
                         help = 'Show version number and exit')
     return parser
 
