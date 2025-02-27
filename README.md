@@ -25,6 +25,7 @@ Parameters:
   --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
   --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
   --vf_screen_mode        The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default
+  --vf_location_details   A table contain the location of every screened virulence factors in the input sequence, two modes, "n" and "y" were provided. "n" was set as default.
   --heat_map              Generate a heatmap file to visualize the prevalence of VFs
   -v, --version           Show version number and exit
 ```
@@ -57,7 +58,7 @@ python SsuisChara.py -i *.fasta
 # Output
   A simlified result will generated in terminal, inputfile + species + serotype + ST
   
-![Terminal screen](https://user-images.githubusercontent.com/108860907/214083327-5432ad06-bc12-4d68-9ae9-cc7b567dc338.png)
+![屏幕截图 2025-02-27 151443](https://github.com/user-attachments/assets/827f2f1a-c65a-416f-bbb5-5f81e0db6f75)
 
  A detailed table generated in work folder
  
