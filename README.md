@@ -16,7 +16,7 @@ prodigal
 Put the python script and database folder into the folder contains your sequence file
 
 ```
-SsuisChara [-i] [-o] [-t] [--min_gene_cov] [--min_gene_id ] [--vf_screen_mode] [--no_heat_map] [-v]
+SsuisChara [-i] [-o] [-t] [--min_gene_cov] [--min_gene_id ] [--vf_screen_mode] [--vf_location_details] [--heatmap] [-v]
 Input and Output:
   -i, --input             Input FASTA file
   -o, --output            Output file
@@ -26,7 +26,7 @@ Parameters:
   --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
   --vf_screen_mode        The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default
   --vf_location_details   A table contain the location of every screened virulence factors in the input sequence, two modes, "n" and "y" were provided. "n" was set as default.
-  --heat_map              Generate a heatmap file to visualize the prevalence of VFs
+  --heatmap              Generate a heatmap file to visualize the prevalence of VFs
   -v, --version           Show version number and exit
 ```
 # Quick usage
