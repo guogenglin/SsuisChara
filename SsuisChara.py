@@ -395,7 +395,7 @@ def generate_output(output, labels, refpath, mode):
     # Generate a blank output table file
     repath = refpath / 'VFs'
     if mode == 'concise':
-        repa = pathlib.Path(repath).resolve() / 'VFs' / 'vfs_in_accessory_genome.fasta'
+        repa = pathlib.Path(repath).resolve() / 'vfs_in_accessory_genome.fasta'
     elif mode == 'full':
         repa = redirection(repath)
     headers = find_all_vfs_name(repa)
