@@ -31,6 +31,8 @@ def get_argument():
                               help = 'Output file')
 
     # Parameters
+    parser_group_2.add_argument('-s', '--species', required = False, type = str, default = '16s', 
+                        help = 'Which method you want to use to perform species identification. You can choose "16s" or "ani", ani is much more accurate [default: 16s]')
     parser_group_2.add_argument('-t', '--threads', required = False, type = int, default = min(multiprocessing.cpu_count(), 4), 
                         help = 'Threads to use for BLAST searches')
     parser_group_2.add_argument('--min_gene_cov', required = False, type = float, default = 80.0, 
@@ -48,7 +50,7 @@ def get_argument():
 
 def check_dependencies():
     # Checks dependencies are available
-    dependencies = ['makeblastdb', 'blastn', 'blastx', 'prodigal']
+    dependencies = ['makeblastdb', 'blastn', 'blastx', 'prodigal', 'fastANI']
     for i in dependencies:
         try:
             subprocess.check_call(['which', i], stdout = subprocess.DEVNULL)
@@ -56,7 +58,41 @@ def check_dependencies():
             print('Error: could not find %s tool' % i, file=sys.stderr)
             sys.exit(1)
 
-def get_best_species_result(inputfile, refpath, threads):
+def ani_rl_file(inputfile, refpath):
+    
+    species_path = pathlib.Path(refpath).resolve() / 'species_identifier'
+    temp_ref = pathlib.Path(inputfile).resolve().parent / 'fastani_rl.txt'
+    with open(temp_ref, 'wt') as file:
+        for species_file in species_path.iterdir():
+            file.write(str(pathlib.Path(species_file).resolve()))
+            file.write('\n')
+    return temp_ref
+
+def ani_species_result(inputfile, refpath, temp_ani_rl, threads):
+    # Perform blast, find and align the 16S sequence with the inputfile, pending the species with a threshold 97%
+    
+    command = ['fastANI', '-q', inputfile, '--rl', temp_ani_rl, '-o' 'temp_ani_out.txt', '-t', str(threads)]
+    subprocess.run(command, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
+    best_species = ''
+    best_ani = 0.0
+    with open('temp_ani_out.txt', 'rt') as file:
+        for line in file:
+            if not line:
+                continue
+            lines = line.strip().split('\t')
+            if not best_species:
+                best_species = lines[1].split('/')[-1].rsplit('.', 1)[0]
+                best_ani = round(float(lines[2]), 2)
+            else:
+                if round(float(lines[2]), 2) > best_ani:
+                    best_species = lines[1].split('/')[-1].rsplit('.', 1)[0]
+                    best_ani = round(float(lines[2]), 2)
+    if best_ani >= 95:
+        return (' ').join(best_species.split('_'))
+    else:
+        return 'Maybe not Streptococcus'
+
+def species_result(inputfile, refpath, threads):
     # Perform blast, find and align the 16S sequence with the inputfile, pending the species with a threshold 97%
     repa = pathlib.Path(refpath).resolve() / 'Ssuis16s.fas'
     inpa = pathlib.Path(inputfile).resolve()
@@ -424,10 +460,10 @@ def positive_output(output, inputfile, species, serotype, sero_coverage, sero_id
         file.write('\t'.join(line))
         file.write('\n') 
 
-def negative_output(output, inputfile):
+def negative_output(output, inputfile, species):
     # Generate output
-    simple_output = inputfile + ' : ' + 'No Streptococcus suis'
-    line = [inputfile, 'NA']
+    simple_output = inputfile + ' : ' + species
+    line = [inputfile, species]
     print(simple_output)
     with open(output, 'at') as file:
         file.write('\t'.join(line))
@@ -482,11 +518,16 @@ def main():
     refpath = pathlib.Path(__file__).resolve().parent / 'database'
     # process the mlst database
     mlst_database, labels = process_mlst_reference(refpath)
+    if args.species == 'ani':
+        temp_ani_rl = ani_rl_file(args.input[0], refpath)
     # Run this pipeline for each single input genome
     for inputfile in args.input:
         if args.heatmap:
             all_input_names.append(inputfile)
-        species = get_best_species_result(inputfile, refpath, args.threads)
+        if args.species == 'ani':
+            species = ani_species_result(inputfile, refpath, temp_ani_rl, args.threads)
+        else:
+            species = species_result(inputfile, refpath, args.threads)
         if species == 'Streptococcus suis':
             serotype, sero_coverage, sero_identity = get_serotype(inputfile, refpath, args.threads)
             best_ST, best_mlst_match = get_best_mlst_result(inputfile, refpath, mlst_database, labels, args.threads)
@@ -501,7 +542,9 @@ def main():
                zoonotic_score, AMRG_level, aminoglycoside, macrolide, tetracycline, best_mlst_match)
         else:
             generate_output(args.output, labels, refpath, args.vf_screen_mode)
-            negative_output(args.output, inputfile)
+            negative_output(args.output, inputfile, species)
+    if args.species == 'ani':
+        temp_ani_rl.unlink()
     # Generate heatmap
     if  args.heatmap:
         generate_heatmap(all_input_names, refpath, all_vfs, args.vf_screen_mode)
