@@ -479,7 +479,7 @@ def main():
     if args.heatmap:
         all_input_names = []
         all_vfs = []
-    refpath = pathlib.Path(__file__).resolve() / 'database'
+    refpath = pathlib.Path(__file__).resolve().parent / 'database'
     # process the mlst database
     mlst_database, labels = process_mlst_reference(refpath)
     # Run this pipeline for each single input genome
@@ -512,4 +512,5 @@ def main():
     print('Total time consumed : {:.1f}h{:.1f}m{:.1f}s'.format(endtime // 3600, endtime % 3600 // 60, endtime % 60))
    
 if __name__ == '__main__':
+
     main()
