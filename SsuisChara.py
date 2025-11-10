@@ -39,8 +39,8 @@ def get_argument():
                                help = 'Minimum percentage identity to consider a single gene complete. [default: 70.0%]')
     parser_group_2.add_argument('--vf_screen_mode', required = False, type = str, default = 'concise', 
                                 help = 'The virulence factor screen mode, two modes, "concise" and "full" were provided. "concise" was set as default.')
-    parser_group_2.add_argument('--vf_location_details', required = False, type = str, default = 'n', 
-                                help = 'A table contain the location of every screened virulence factors in the input sequence, two modes, "n" and "y" were provided. "n" was set as default.')
+    parser_group_2.add_argument('--vf_location_details', action='store_true', 
+                                help = 'Generate a table contain the location of every screened virulence factors in the input sequence.')
     parser_group_2.add_argument('--heatmap', action='store_true', help = 'Generate a heatmap file to visualize the prevalence of VFs')
     parser_group_2.add_argument('-v', '--version', action = 'version', version = 'SsuisChara v' + __version__, 
                         help = 'Show version number and exit')
@@ -302,7 +302,7 @@ def get_vfs_result(inputfile, refpath, threads, mode, min_gene_id, min_gene_cov,
                     vf_details[best_match] += gene_code
     vfs_counts = len(vf_genes)
     headers = find_all_vfs_name(repa)
-    if location_details == 'y':
+    if location_details:
         generate_vf_matrix_output(inputfile, vf_details, headers)
     if mode == 'full':
         pathlib.Path(repa).unlink()
@@ -514,3 +514,4 @@ def main():
 if __name__ == '__main__':
 
     main()
+
