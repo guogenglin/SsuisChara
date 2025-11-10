@@ -16,11 +16,12 @@ prodigal
 Put the python script and database folder into the folder contains your sequence file
 
 ```
-SsuisChara [-i] [-o] [-t] [--min_gene_cov] [--min_gene_id ] [--vf_screen_mode] [--vf_location_details] [--heatmap] [-v]
+SsuisChara [-i] [-o] [-t] [-s] [--min_gene_cov] [--min_gene_id ] [--vf_screen_mode] [--vf_location_details] [--heatmap] [-v]
 Input and Output:
   -i, --input             Input FASTA file
   -o, --output            Output file
 Parameters:
+  -s, --species           Which method you want to use to perform species identification. You can choose "16s" or "ani", ani is much more accurate [default: 16s]
   -t, --threads           Threads to use for BLAST searches
   --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
   --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
@@ -34,7 +35,14 @@ Parameters:
 python SsuisChara.py -i *.fasta 
 ```
 # Species verification
-  The 16S rRNA sequence of *Streptococcus suis* were obtained from public database, through align the 16S rRNA sequence with input sequence, the 16S sequence in input sequence could be found. If the identity of 16S rRNA sequence lower than 97%, we consider the input sequence do not belong to *Streptococcus suis* species, otherwise, we consider the input sequence belong to *Streptococcus suis* species.
+In our latest version, we provide two methods for species verification, allowing users to choose the one that best suits their needs: the '16s' method, based on 16S rRNA sequence alignment, and the 'ani' method, based on average nucleotide identity (ANI).
+
+In 2024, a new subspecies of Streptococcus suis, Streptococcus suis subsp. hashimotonensis, was reported, complicating species identification. Isolates of this subspecies share over 95% ANI with other S. suis strains, which means that performing ANI using only S. suis isolates is insufficient. which means we cannot only use Streptococcus suis isolate to perform ANI, then I think why don't we collect all type strains within the genus Streptococcus for ANI analysis, while keeping the 16S alignment method as the default.
+
+This approach allows users to choose based on their goals. For example, if a user wants to perform serotype or virulence factor screening on isolates with a clean background, the faster 16S-based method is sufficient. However, if precise species verification of an input genome is required, the ANI-based method can provide a more accurate identification, indicating the exact species within the genus Streptococcus, rather than returning a generic 'NA' as with the old 16S method.
+
+Note that the ANI method is approximately twice as time-consuming as the 16S-based method. We use a 95% ANI threshold and a 97% threshold for 16S rRNA alignment.
+
 # Serotype prediction
   Initially, serotyping was based on serological tests, subsequently, the serotyping determine locus of many bacteria were found in the genome, and a lot of molecular serotyping method were developed based on the difference of serotyping determine locus, such as multiplex PCR. Now the number of acquired sequenced bacteria genome in public databased are fastly increasing, allow us to explore a full locus alignment method to high throughput and precisely determine serotype *in silico*.
   
