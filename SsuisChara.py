@@ -238,7 +238,7 @@ def get_best_mlst_result(inputfile, refpath, mlst_database, labels, threads):
     best_match_in_ref = []
     best_ST = ''
     for i in labels:
-        filename = i + '.fas'
+        filename = i + '.fasta'
         repath = refpath / 'MLST' / filename
         repa = pathlib.Path(repath).resolve()
         blast_hits = run_blast(repa, inpa, threads, 'mlst')
@@ -272,7 +272,7 @@ def process_mlst_reference(refpath):
     # Generate a dict for mlst, ST : alleles and collect the mlst labels
     database = {}
     labels = []
-    profilepath = pathlib.Path(refpath).resolve() / 'MLST' / 'MLST_profiles'
+    profilepath = pathlib.Path(refpath).resolve() / 'MLST' / 'profiles.tsv'
     with open(profilepath, 'rt') as file:
         for line in file:
             profile = line.strip('\n').split('\t')
