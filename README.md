@@ -50,7 +50,7 @@ Note that the ANI method is approximately twice as time-consuming as the 16S-bas
   
   To aviod the uncorrected prediction, we displayed the coverage and identity of predicted serotype, if it lower than the threshold (we set as 95% prelimitarily), a "?" will be added to the end of output string of predicted serotype.
 # MLST sequence type
-  The MLST database were obtained from [pubMLST](https://pubmlst.org/), update: 2026-03-06
+  The MLST database were obtained from [pubMLST](https://pubmlst.org/), update: 2026-04-01
   
   Seven housekeeping genes, *aroA*, *cpn60*, *dpr*, *gki*, *mutS*, *recA*, and *thrA*, of *Streptococcus suis*, were screened in input genome and return there allele number, or closest allele number, then determine there Sequence Type (ST), if not every allele number are exact match, a "?" will be added to the end of output string of predicted ST.
 # Virulence associated factors (vafs) screen
