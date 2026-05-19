@@ -53,6 +53,8 @@ Note that the ANI method is approximately twice as time-consuming as the 16S-bas
   The MLST database were obtained from [pubMLST](https://pubmlst.org/), update: 2026-04-01
   
   Seven housekeeping genes, *aroA*, *cpn60*, *dpr*, *gki*, *mutS*, *recA*, and *thrA*, of *Streptococcus suis*, were screened in input genome and return there allele number, or closest allele number, then determine there Sequence Type (ST), if not every allele number are exact match, a "?" will be added to the end of output string of predicted ST.
+
+  Now you can updating the MLST database by yourself by runing the '''download.sh''' script in '''./database/MLST''' dictionary.
 # Virulence associated factors (vafs) screen
   Total 107 vafs of *S. suis* were collected from published papers and established as database to screen there presence and absence in input genome. 56 vafs distributed in accessory genome of S. suis, 51 vafs distributed in core genome of *S. suis*, two screen mode are provided, "concise" and "full", "concise" mode was set as default, only screen 56 vafs in accessory genome, "full" mode could screen all vafs.
   
